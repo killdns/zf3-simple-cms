@@ -8,9 +8,10 @@ class NeedAuthController extends DefaultController
 {
     public function onDispatch (MvcEvent $e)
     {
-        if ($this->getCurrentUser()) {
+        $user = $this->getAuthenticator()->getIdentity();
+        if (empty($user))
             return $this->redirect()->toRoute('auth/default', ['controller' => 'index', 'action' => 'login']);
-        }
+
         return parent::onDispatch($e);
     }
 }

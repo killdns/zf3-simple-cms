@@ -29,7 +29,7 @@ class UserRepository extends EntityRepository
     {
         $em = $this->getEntityManager();
         $user->setPassword(UserRepository::passwordTransform($user->getPassword()));
-        if (empty($user->getType())) $user->setType($this->checkCreateAdminUserIfNotExists($this) ? 0 : 2);
+        $user->setType($this->checkCreateAdminUserIfNotExists($this) ? 0 : 2);
         $em->persist($user);
         $em->flush();
     }
@@ -64,7 +64,7 @@ class UserRepository extends EntityRepository
         $user = $this->findOneBy($params);
         return $user;
     }
-    public function findAll()
+    public function findAllQuery()
     {
         $em = $this->getEntityManager();
         $queryBuilder = $em->createQueryBuilder();

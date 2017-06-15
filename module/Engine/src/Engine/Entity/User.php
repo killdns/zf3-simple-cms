@@ -5,9 +5,9 @@ namespace Engine\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Users
+ * User
  *
- * @ORM\Table(name="users", indexes={@ORM\Index(name="u_login_index", columns={"login"})})
+ * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="u_login_index", columns={"login"})})
  * @ORM\Entity(repositoryClass="Engine\Entity\Repository\UserRepository")
  */
 class User
@@ -20,13 +20,6 @@ class User
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="type", type="integer", nullable=false)
-     */
-    private $type = '1';
 
     /**
      * @var string
@@ -42,7 +35,12 @@ class User
      */
     private $password;
 
-
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="type", type="integer", nullable=true)
+     */
+    private $type = '1';
 
 
 
@@ -57,35 +55,11 @@ class User
     }
 
     /**
-     * Set type
-     *
-     * @param integer $type
-     *
-     * @return Users
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
      * Set login
      *
      * @param string $login
      *
-     * @return Users
+     * @return User
      */
     public function setLogin($login)
     {
@@ -109,7 +83,7 @@ class User
      *
      * @param string $password
      *
-     * @return Users
+     * @return User
      */
     public function setPassword($password)
     {
@@ -128,6 +102,27 @@ class User
         return $this->password;
     }
 
+    /**
+     * Set type
+     *
+     * @param integer $type
+     *
+     * @return User
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
 
+        return $this;
+    }
 
+    /**
+     * Get type
+     *
+     * @return integer
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
 }

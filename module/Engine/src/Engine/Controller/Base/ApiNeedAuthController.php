@@ -8,7 +8,8 @@ class ApiNeedAuthController extends ApiController
 {
     public function onDispatch (MvcEvent $e)
     {
-        if (empty($this->user))
+        $user = $this->getAuthenticator()->getIdentity();
+        if (empty($user))
             return $this->redirect()->toRoute('home', ['action' => 'index']);
 
         return parent::onDispatch($e);

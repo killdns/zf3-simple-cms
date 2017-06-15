@@ -24,7 +24,7 @@ class UsersController extends AdminController
         $searchForm = new SearchForm();
         $params = $this->params()->fromQuery();
 
-        $users = $repository->findAll();
+        $users = $repository->findAllQuery();
 
         if (!empty($params)) {
 
