@@ -1,0 +1,255 @@
+<div class="modal animated fadeInDown" id="deleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Удаление</h4>
+            </div>
+            <div class="modal-body">
+                <p>One fine body…</p>
+            </div>
+            <div class="modal-footer">
+                <input type="text" class="hidden">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Удалить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="javascript:void(0)" class="btn btn-default btn-lg btn-block btn-raised animated fadeIn" id="showSearch">Поиск<div class="ripple-container"></div></a>
+<div>
+    <div class="bs-docs-selection animated fadeIn hidden search-card" style="text-align: center;">
+        <div class="well" style="word-wrap: break-word;">
+
+            <?
+            echo  $this->form()->openTag($searchForm);
+            echo  '<h3>Поиск</h3>';
+
+            echo  '<fieldset>';
+            foreach ($searchForm as $element)
+            {
+                $attributes = $element->getAttributes();
+
+                if($element->getLabel())
+                {
+                    $element->setLabelAttributes(array('class' => 'col-lg-2 control-label'));
+
+                }
+
+                if(isset($attributes['type']) && $attributes['type'] == 'text')
+                {
+                    echo '<div class="form-group">';
+                    echo  $this->formLabel($element);
+                    echo  '<div class = "col-md-10">';
+                    echo  $this->formInput($element);
+                    echo  '</div>';
+                    echo '</div>';
+                }
+                else if(isset($attributes['type']) && $attributes['type'] == 'number')
+                {
+                    echo '<div class="form-group">';
+                    echo  $this->formLabel($element);
+                    echo  '<div class = "col-md-10">';
+                    echo  $this->formInput($element);
+                    echo  '</div>';
+                    echo '</div>';
+                }
+                else if (isset($attributes['type']) && $attributes['type'] == 'select')
+                {
+                    echo '<div class="form-group">';
+                    echo  $this->formLabel($element);
+                    echo  '<div class = "col-md-10">';
+                    echo  $this->formSelect($element);
+                    echo  '</div>';
+                    echo '</div>';
+                }
+            }
+
+            echo '<div class="form-group pull-right"><div>';
+            foreach ($searchForm as $element) {
+                $attributes = $element->getAttributes();
+                if (isset($attributes['type']) && ($attributes['type'] == 'submit' || $attributes['type'] == 'button')) {
+
+                    echo  $this->formButton($element);
+                }
+
+            }
+            echo '</div></div>';
+            echo '</fieldset>';
+            echo  $this->form()->closeTag($searchForm);
+
+            ?>
+        </div>
+    </div>
+</div>
+
+<div>
+<div class="bs-docs-selection animated fadeIn user-list-card" style="text-align: center;">
+    <div class="well" style="word-wrap: break-word;">
+        <table class="table table-striped table-hover table-user-list">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Логин</th>
+                <th>Тип учетной записи</th>
+                <th class="text-right">Действие</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            foreach ($userList as $user) {
+                echo "<tr>
+                <td>{$user->getId()}</td>
+                <td>{$user->getLogin()}</td>
+                <td>". Engine\Module::APPLICATION_CONFIG['userType'][$user->getType()] ."</td>
+                <td class='text-right-important'>
+                    <div class='btn-group btn-group-table'>
+                        <a href='javascript:void(0)' data-target='#' class='btn btn-default dropdown-toggle button-table' data-toggle='dropdown' aria-expanded='false'>
+                            Список действий<span class='caret'></span><div class='ripple-container'></div></a>
+                        <ul class='dropdown-menu'>
+                            <li><a href='javascript:void(0)' class='user-delete' data-toggle='modal'  data-target='#deleteModal' >Удалить</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>";}
+            ?>
+            </tbody>
+        </table>
+        <?php
+        if (count($userList) == 0)
+        {
+            echo '<h3>Работодателей не найдено</h3>';
+        }
+        echo $this->paginationControl($userList,
+            'Sliding',
+            'pagination_control',
+            ['route' => 'admin/users/list', 'query' => $_SERVER['QUERY_STRING']]);
+
+        ?>
+    </div>
+</div>
+</div>
+
+<script>
+    $("body").on( "click", ".user-delete", function( event ) {
+        $(".modal-body > p").html("Удалить работодателя <b>" +
+            $(this).parent().parent().parent().parent().parent().children("td:eq(1)").text()
+            + "</b> ?");
+        $(".modal-footer > input").val($(this).parent().parent().parent().parent().parent().children("td:eq(0)").text());
+    });
+
+    $("body").on( "click", ".modal-footer > button.btn-danger", function( event ) {
+        $.ajax({
+            type: 'POST',
+            url: '<?=$this->url('api/admin/users', ['action' => 'remove']) ?>',
+            data: {id : $(this).parent().children('input').val()} ,
+            success: function (data) {
+                var arr = $.map(data, function(el) {
+                    return el
+                });
+                if (arr[0] == 'success') {
+                    location.reload();
+                }
+                if (arr[0] == 'error') {
+                    alert(arr[1]);
+                }
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert('error');
+            }
+        });
+
+
+
+    });
+
+    $("body").on( "click", "button[name='closeSearch']", function( event ) {
+        $( ".search-card" ).removeClass('fadeIn');
+        $( ".search-card" ).addClass('hidden');
+
+        $( "#showSearch" ).removeClass('hidden');
+        $( "#showSearch" ).addClass('fadeIn');
+    });
+
+    $("body").on( "click", "#showSearch", function( event ) {
+        $( "#showSearch" ).removeClass('fadeIn');
+        $( "#showSearch" ).addClass('hidden');
+
+        $( ".search-card" ).removeClass('hidden');
+        $( ".search-card" ).addClass('fadeIn');
+    });
+
+    $("body").on( "click", "button[name='closeSearch']", function( event ) {
+        $( ".search-card" ).removeClass('fadeIn');
+        $( ".search-card" ).addClass('hidden');
+
+        $( "#showSearch" ).removeClass('hidden');
+        $( "#showSearch" ).addClass('fadeIn');
+    });
+
+
+    $("body").on( "click", "button[name='resetSearch']", function( event ) {
+
+       routeurl = document.location.origin + document.location.pathname;
+
+       $('.user-list-card').removeClass('fadeIn');
+       $('.user-list-card').addClass('fadeOut');
+       $.ajax({
+           type: 'GET',
+           url: routeurl,
+           data: null,
+           success: function (data) {
+               html = $.parseHTML(data);
+
+               $("form[name='SearchForm'] > fieldset").html($(html).find("form[name='SearchForm'] > fieldset"));
+
+               $('.user-list-card').html($(html).find('.user-list-card').html());
+
+               $('.user-list-card').removeClass('fadeOut');
+               $('.user-list-card').addClass('fadeIn');
+
+               history.pushState(null, 'title', routeurl);
+           },
+           error: function (xhr, ajaxOptions, thrownError) {
+               alert('error');
+           }
+       });
+
+       return false;
+
+   });
+    $("body").on( "submit", "#SearchForm", function( event ) {
+
+        $('.user-list-card').removeClass('fadeIn');
+        $('.user-list-card').addClass('fadeOut');
+        $.ajax({
+            type: 'GET',
+            url: '<?= $this->url($this->currentRoute()->getRoute()); ?>',
+            data: $('#SearchForm').serialize(),
+            success: function (data) {
+                html = $.parseHTML(data);
+                $('.user-list-card').html($(html).find('.user-list-card').html());
+
+                $('html, body').animate({
+                    scrollTop: $(".user-list-card").offset().top - 60
+                }, 1500);
+
+                $('.user-list-card').removeClass('fadeOut');
+                $('.user-list-card').addClass('fadeIn');
+
+
+                routeurl = document.location.origin + document.location.pathname;
+                formData = $('#SearchForm').serialize();
+                history.pushState(null, 'title', routeurl + '?' + formData);
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert('error');
+            }
+        });
+
+        return false;
+    });
+</script>

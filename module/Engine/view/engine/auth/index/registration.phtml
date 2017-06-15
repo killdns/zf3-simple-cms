@@ -1,0 +1,94 @@
+<div class="col-centered col-lg-5">
+<div class="bs-docs-selection animated fadeIn text-center" name="RegistrationCard">
+    <div class="well">
+        <?
+        echo  $this->form()->openTag($form);
+        echo  '<h3>Регистрация</h3>';
+
+        echo  '<fieldset>';
+        foreach ($form as $element)
+        {
+            echo '<div class="form-group">';
+            $attributes = $element->getAttributes();
+
+            if($element->getLabel())
+            {
+                $element->setLabelAttributes(array('class' => 'col-lg-2 control-label'));
+
+            }
+
+            if(isset($attributes['type']) && ($attributes['type'] == 'text' ||
+                    $attributes['type'] == 'email' ||
+                    $attributes['type'] == 'url' ||
+                    $attributes['type'] == 'password')) {
+                echo $this->formLabel($element);
+                echo '<div class = "col-lg-10">';
+                echo $this->formInput($element);
+                echo '</div>';
+            }
+            elseif (isset($attributes['type']) && $attributes['type'] == 'submit')
+            {
+                echo  '<div class = "container-fluid">';
+                echo  $this->formRow($element);
+                echo  '</div>';
+            }
+            else
+            {
+                echo  '<div class = "col-lg-10">';
+                echo $this->formRow($element);
+                echo  '</div>';
+            }
+            echo '</div>';
+        }
+        echo '</fieldset>';
+        echo  $this->form()->closeTag();
+
+        ?>
+    </div>
+</div>
+    <div class="bs-docs-selection animated fadeIn hidden" name="RegistrationSuccessCard" style="text-align: center;">
+        <div class="well"><br><br><br><br><br><br>
+            <h3>Вы успешно зарегистрировались</h3><br><br><br><br><br><br>
+            <a class="btn btn-primary"  href="<?= $this->url('auth/login') ?>"><? echo 'Войти'; ?></a>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#RegistrationForm').submit(function() {
+        $('.alert').remove();
+        $.ajax({
+            type: 'POST',
+            url: '<?= $this->url('api/auth', ['action' => 'registration']) ?>',
+            data: $('#RegistrationForm').serialize(),
+            success: function(data) {
+                var arr = $.map(data, function(el) {
+                    return el
+                });
+                if (arr[0] == 'success') {
+                    $('div[name=RegistrationCard]').remove();
+                    $('div[name=RegistrationSuccessCard]').removeClass('hidden');
+                    setTimeout(function() { location.href = "<?= $this->url('auth/login') ?>"; }, 5000)
+                }
+                if (arr[0] == 'error') {
+                    $(  '<div class="alert alert-dismissable alert-danger">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×' +
+                        '</button>' +
+                        '<ul></ul></div>').insertAfter("form > h3");
+                    for (var i = 1; i < arr.length; i++) {
+                        $('<li>' + arr[i] + '</li>').insertAfter("form > .alert > ul");
+                    }
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                $(
+                    '<div class="alert alert-dismissable alert-danger">' +
+                    '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×' +
+                    '</button>' +
+                    '<ul><li>' + xhr.status + ' ' + thrownError + '</li></ul></div>').insertAfter("form > h3");
+            }
+        });
+        return false;
+    });
+</script>
+

@@ -1,0 +1,93 @@
+<div class="col-centered col-lg-5">
+<div class="bs-docs-selection animated fadeIn" style="text-align: center;">
+    <div class="well" style="word-wrap: break-word;">
+        <?
+        echo  $this->form()->openTag($form);
+        echo  '<h3>Вход</h3>';
+
+        echo  '<fieldset>';
+        foreach ($form as $element)
+        {
+            echo '<div class="form-group">';
+            $attributes = $element->getAttributes();
+
+            if($element->getLabel())
+            {
+                $element->setLabelAttributes(array('class' => 'col-lg-2 control-label'));
+
+            }
+
+            if(isset($attributes['type']) && $attributes['type'] == 'text')
+            {
+                echo  $this->formLabel($element);
+                echo  '<div class = "col-lg-10">';
+                echo  $this->formInput($element);
+                echo  '</div>';
+            }
+
+            elseif (isset($attributes['type']) && $attributes['type'] == 'password')
+            {
+                echo $this->formLabel($element);
+                echo  '<div class = "col-lg-10">';
+                echo  $this->formInput($element);
+                echo  '</div>';
+            }
+            elseif (isset($attributes['type']) && $attributes['type'] == 'submit')
+            {
+                echo  '<div class = "col-lg-10" style="width: 100%">';
+                echo  $this->formRow($element);
+                echo  '</div>';
+            }
+            else
+            {
+                echo  '<div class = "col-lg-10">';
+                echo $this->formRow($element);
+                echo  '</div>';
+            }
+            echo '</div>';
+        }
+        echo '</fieldset>';
+        echo  $this->form()->closeTag();
+
+        ?>
+            <br>
+            <a href="<?= $this->url('auth/registration') ?>">Регистрация</a>
+    </div>
+</div>
+</div>
+
+<script>
+    $('#LoginForm').submit(function() {
+        $('.alert').remove();
+        $.ajax({
+            type: 'POST',
+            url: '<?= $this->url('api/auth', ['action' => 'login']) ?>',
+            data: $('#LoginForm').serialize(),
+            success: function(data) {
+                var arr = $.map(data, function(el) {
+                    return el
+                });
+                if (arr[0] == 'success') {
+                    location.href = "<?= $this->url('lk') ?>";
+                }
+                if (arr[0] == 'error') {
+                    $(  '<div class="alert alert-dismissable alert-danger">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×' +
+                        '</button>' +
+                        '<ul></ul></div>').insertAfter("form > h3");
+                    for (var i = 1; i < arr.length; i++) {
+                        $('<li>' + arr[i] + '</li>').insertAfter("form > .alert > ul");
+                    }
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                $(
+                    '<div class="alert alert-dismissable alert-danger">' +
+                    '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×' +
+                    '</button>' +
+                    '<ul><li>' + xhr.status + ' ' + thrownError + '</li></ul></div>').insertAfter("form > h3");
+            }
+        });
+        return false;
+    });
+</script>

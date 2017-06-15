@@ -1,0 +1,19 @@
+<?php
+foreach ($activePage->pages as $page)
+{
+    if ($page->__get('visible') == false)
+        continue;
+    echo '
+                            <div class="col-md-4 animated fadeInDown">
+                            <div class="panel panel-' . ($page->__get('panel_style') ?? 'default') .' ">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">' . $page->__get('label') . '</h3>
+                                </div>
+                                <div class="panel-body">
+                                    ' . $page->__get('description') . '
+                                    </br>
+                                    <a href="' . $page->getHref() . '" class="btn btn-primary pull-right">Открыть<div class="ripple-container"></div></a>
+                                </div>
+                            </div>
+                            </div>';
+}

@@ -1,0 +1,177 @@
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+body {
+    padding-top: 80px;
+    padding-bottom: 40px;
+}
+
+.zf-green {
+    color: #68b604;
+}
+
+body > div.container
+{
+    margin-top: 0px;
+}
+div.container a.navbar-brand > img {
+    display: inline;
+    margin-right: 4px;
+    margin-top: -2px;
+}
+
+.margin-top-05 { margin-top: 0.5em; }
+.margin-top-10 { margin-top: 1.0em; }
+.margin-top-15 { margin-top: 1.5em; }
+.margin-top-20 { margin-top: 2.0em; }
+.margin-top-25 { margin-top: 2.5em; }
+.margin-top-30 { margin-top: 3.0em; }
+
+.margin-bottom-05 { margin-bottom: 0.5em; }
+.margin-bottom-10 { margin-bottom: 1.0em; }
+.margin-bottom-15 { margin-bottom: 1.5em; }
+.margin-bottom-20 { margin-bottom: 2.0em; }
+.margin-bottom-25 { margin-bottom: 2.5em; }
+.margin-bottom-30 { margin-bottom: 3.0em; }
+.margin-bottom-30 { margin-bottom: 5.0em; }
+
+.margin-top-20-important { margin-top: 2.0em !important;}
+.text-left-important { text-align: left !important;}
+.text-right-important { text-align: right !important;}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
+.breadcrumb
+{
+    margin-bottom: 2.0em;
+}
+
+.auth-cards
+{
+    margin-bottom: 2.0em;
+}
+
+
+.lk-profile-icon
+{
+    font-size: 20em;
+    color: gray;
+}
+.lk-username
+{
+    font-size: 3em;
+}
+.lk-account-type
+{
+    font-size: 2em;
+}
+
+.checkbox-table
+{
+    margin: 0px 0px;
+}
+.btn-group-table
+{
+    margin: 0;
+}
+.button-table
+{
+    padding: 3px;
+}
+
+
+
+
+table.table-user-list > tbody > tr > td {
+    vertical-align: middle !important;
+    text-align: left;
+}
+
+@media
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+    /* Force table to not be like tables anymore */
+    table.table-user-list,
+    table.table-user-list > thead,
+    table.table-user-list > thead > tr,
+    table.table-user-list > thead > tr > th,
+    table.table-user-list > tbody,
+    table.table-user-list > tbody > tr,
+    table.table-user-list > tbody > tr > td {
+        display: block;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    table.table-user-list > thead > tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    table.table-user-list > thead > tr,
+    table.table-user-list > tbody > tr
+    { border: 1px solid #ccc; }
+
+    table.table-user-list > tbody > tr > td {
+        /* Behave  like a "row" */
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    table.table-user-list > tbody > tr > td:before {
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+    }
+    table.table-user-list > tbody > tr > td:nth-of-type(4)
+    {
+        text-align: left !important;
+    }
+
+    /*
+    Label the data
+    */
+    table.table-user-list > tbody > tr > td:nth-of-type(1):before { content: "#"; }
+    table.table-user-list > tbody > tr > td:nth-of-type(2):before { content: "Логин"; }
+    table.table-user-list > tbody > tr > td:nth-of-type(3):before { content: "Тип учетной записи"; }
+    table.table-user-list > tbody > tr > td:nth-of-type(4):before { content: "Действие"; }
+}
+
+@media (max-width: 992px) {
+    body > div.container {
+        margin-top: -25px;
+    }
+}

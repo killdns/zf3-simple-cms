@@ -1,0 +1,13 @@
+<?
+$pgCount = count($this->pages);
+echo '<ul class="breadcrumb">';
+foreach ($this->pages as $key => $page)
+{
+    echo '<li>';
+    if ($key < $pgCount - 1)
+        echo '<a href="'. $page->getHref() . '">'. $page->getLabel() . '</a>';
+    else
+        echo $page->getLabel();
+    echo '</li>';
+}
+echo '</ul>';
