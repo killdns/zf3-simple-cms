@@ -10,7 +10,7 @@ class NeedAuthController extends DefaultController
     {
         $user = $this->getAuthenticator()->getIdentity();
         if (empty($user))
-            return $this->redirect()->toRoute('auth/default', ['controller' => 'index', 'action' => 'login']);
+            return $this->redirect()->toRoute('auth', ['controller' => 'index', 'action' => 'login']);
 
         return parent::onDispatch($e);
     }

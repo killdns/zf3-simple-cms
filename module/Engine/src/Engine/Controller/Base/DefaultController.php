@@ -4,7 +4,6 @@ namespace Engine\Controller\Base;
 
 use Doctrine\ORM\EntityManager;
 use Engine\Entity\User;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
 use Zend\Authentication\AuthenticationService;
 
@@ -21,6 +20,8 @@ class DefaultController extends AbstractActionController
         $this->setAuthenticator($this->getCurrentAuthenticator());
         $this->setCurrentUser($this->authenticator->getIdentity());
 
+        $routeName =  $e->getRouteMatch()->getMatchedRouteName();
+        if (!($routeName == 'api' || (strlen($routeName)>=4 && substr( $routeName, 0, 4 ) === "api/") ))
         $this->layout()->setVariables(
             [
                 'user' => $this->getCurrentUser(),

@@ -3,16 +3,55 @@
 namespace Engine\Controller\Base;
 
 use Zend\Mvc\MvcEvent;
+use Zend\View\Model\JsonModel;
 
 class ApiAdminController extends ApiNeedAuthController
 {
     public function onDispatch (MvcEvent $e)
     {
-        $user = $this->getAuthenticator()->getIdentity();
-        if (empty($user) || $user->getType() > 1)
-            return $this->redirect()->toRoute('home');
+        if ($this->checkError($e)) {
+            return parent::onDispatch($e);
+        }
+        else {
+            $e->setViewModel( new JsonModel ([]));
+        }
 
-        return parent::onDispatch($e);
+        parent::onDispatchCallback($e);
+
+
+        if ($this->checkError($e))
+            return parent::onDispatch($e);
+
+          $e->setViewModel( new JsonModel ([]));
+          $e->getViewModel()->clearVariables();
+          $this->hasAdminAccess($e);
+
+          if ($this->checkError($e))
+              return;
+
+          return parent::onDispatch($e);
     }
 
+    public function onDispatchCallback(MvcEvent $e)
+    {
+        if (!parent::isRoot())
+        {
+            parent::onDispatchCallback($e);
+            $this->checkError($e);
+        }
+        $this->hasAdminAccess($e);
+    }
+
+    private function hasAdminAccess(MvcEvent $e)
+    {
+
+        $user = $this->getAuthenticator()->getIdentity();
+        if (empty($user) || $user->getType() > 1) {
+            $result = [
+                'status' => 'error',
+                'messages' => ['Access denied2']
+            ];
+            $e->getViewModel()->setVariables($result);
+        }
+    }
 }
