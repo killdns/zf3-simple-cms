@@ -44,12 +44,11 @@ class ApiAdminController extends ApiNeedAuthController
 
     private function hasAdminAccess(MvcEvent $e)
     {
-
         $user = $this->getAuthenticator()->getIdentity();
         if (empty($user) || $user->getType() > 1) {
             $result = [
                 'status' => 'error',
-                'messages' => ['Access denied2']
+                'messages' => ['Access denied']
             ];
             $e->getViewModel()->setVariables($result);
         }

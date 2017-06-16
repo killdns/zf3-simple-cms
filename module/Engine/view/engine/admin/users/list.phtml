@@ -157,7 +157,7 @@
 
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert('error');
+                alert('Error. ' + xhr.status + ' ' + thrownError);
             }
         });
 
@@ -213,7 +213,7 @@
                history.pushState(null, 'title', routeurl);
            },
            error: function (xhr, ajaxOptions, thrownError) {
-               alert('error');
+               alert('Error. ' + xhr.status + ' ' + thrownError);
            }
        });
 
@@ -246,7 +246,7 @@
 
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert('error');
+                alert('Error. ' + xhr.status + ' ' + thrownError);
             }
         });
 
